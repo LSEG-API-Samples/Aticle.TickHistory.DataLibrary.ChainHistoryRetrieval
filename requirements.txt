@@ -1,0 +1,2 @@
+jupyterlab==4.6.5
+lseg-data==2.1.1

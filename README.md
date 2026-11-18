@@ -7,8 +7,6 @@ Examples:
 - **0#FGBMc1=DLV**: Eurex Euro-Bobl (5-year German Govt Bond)
 - **0#JGBc1=DLV**: Osaka Exchange 10-Year Japanese Government Bond
 
-See [README.md](./README.md) for more about these chain rules.
-
 The `Chain` object returns **current constituents** because it gets data from the Real-Time platform. To resolve constituents for a specific time, use the [LSEG Tick History REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api), which supports current and past constituents, including inactive, historical-only instruments. 
 
 Once you get the constituents of that specific time from the Tick History, you can then retrieve their historical data with Tick History, the Data Library, or another LSEG API such as [Data Platform APIs (RDP)](https://developers.lseg.com/en/api-catalog/refinitiv-data-platform/refinitiv-data-platform-apis).

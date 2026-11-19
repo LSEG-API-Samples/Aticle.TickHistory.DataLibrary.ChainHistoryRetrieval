@@ -1,4 +1,4 @@
-# Getting Historical Chain Constituents with LSEG Tick History REST API and LSEG Data Library for Python
+# Getting Historical Chain Data with LSEG Tick History REST API and LSEG Data Library for Python
 
 - Last Updated: November 2026
 - Language: Python
@@ -25,10 +25,96 @@ The [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/re
 
 - [Tutorial 15: Historical Chain Constituents Search](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorial-15-historical-chain-constituents-search)
 
-Once you have the constituents for the period you need, you can retrieve their historical data using Tick History, the Data Library, or another LSEG API, such as the [Data Platform APIs (RDP)](https://developers.lseg.com/en/api-catalog/refinitiv-data-platform/refinitiv-data-platform-apis).
+Once you have the constituents for the period you need, you can retrieve their historical data using Tick History, the Data Library (every editions), or another LSEG API, such as the [Data Platform APIs (RDP)](https://developers.lseg.com/en/api-catalog/refinitiv-data-platform/refinitiv-data-platform-apis).
 
 #### Note
 
-The Tick History REST API can also be used for the entire workflow. See the [Tick History REST API tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction) for details. This example focuses on developers who use the Data Library as their primary API.
+The Tick History REST API can also be used for the entire workflow. See the [Tick History REST API tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction) for details. This example focuses on developers who use the Data Library for Python as their primary API.
 
-[tbd]
+---
+
+## Included Notebooks
+
+- [trth_chainhistory_session.ipynb](notebook/trth_chainhistory_session.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury chain for two date ranges, compares the results, and retrieves sample weekly bid and ask history using the LSEG Data Library for Python.
+
+---
+
+## Prerequisites
+
+1. DataScope Select credentials and permission to access the Tick History REST API
+2. Workspace or Data Platform access for the LSEG Data Library for Python
+3. Python 3.12 or later
+4. Network access to LSEG services
+
+Contact your LSEG Account Manager or CSM team to request API access.
+
+---
+
+## Project Setup
+
+1. Create and activate a virtual environment
+
+```powershell
+# Windows (PowerShell)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+```bash
+# macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install dependencies
+
+Run these commands *after activating the virtual environment*:
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+3. Configure DSS credentials
+
+Set the DSS Username and password to your OS environment variable named `DSS_USERNAME` and `DSS_PASSWORD`. Alternatively, change the following code to your DSS credential.
+
+```python
+#DSS_USERNAME = os.environ.get("DSS_USERNAME")
+#DSS_PASSWORD = os.environ.get("DSS_PASSWORD")
+
+DSS_USERNAME = "Your DSS Username"
+DSS_PASSWORD = "Your DSS Password"
+```
+
+4. Configure Data Library credential
+
+See [Data Library for Python - QuickStart Guide](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python/quick-start) page for more detail.
+
+5. Run the notebook
+
+Open the prefer notebook in JupyterLab or VS Code and run the cells in order.
+
+```powershell
+cd \notebook
+jupyter lab trth_chainhistory_session.ipynb
+```
+---
+
+## Dependencies
+
+| Package | Purpose |
+|---|---|
+| `lseg-data` | LSEG Data Library for Python — market data access |
+| `jupyterlab` | Interactive notebook environment |
+
+See `requirements.txt` for pinned versions.
+
+---
+
+## License
+
+See [LICENSE.md](LICENSE.md).
+
+---
+

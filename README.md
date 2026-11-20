@@ -35,7 +35,7 @@ The Tick History REST API can also be used for the entire workflow. See the [Tic
 
 ## Included Notebooks
 
-- [trth_chainhistory_session.ipynb](notebook/trth_chainhistory_session.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury chain for two date ranges, compares the results, and retrieves sample weekly bid and ask history using the LSEG Data Library for Python.
+- [chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury chain for two date ranges, compares the results, and retrieves sample weekly bid and ask history using the LSEG Data Library for Python.
 
 ---
 
@@ -118,3 +118,14 @@ See [LICENSE.md](LICENSE.md).
 
 ---
 
+## Reference
+
+You can find more detail regarding the Data Library and Python Asyncio from the following resources:
+
+- [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api) on the [LSEG Developer Community](https://developers.lseg.com/) website
+- [LSEG Tick History - REST API Tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction)
+- [LSEG Data Library for Python](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python) 
+- [Data Library for Python - Quickstart Guide](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python/quick-start)
+- [Data Library for Python Examples on GitHub](https://github.com/LSEG-API-Samples/Example.DataLibrary.Python) repository
+
+For any question related to this example or Data Library, please use the Developers Community [Q&A Forum](https://community.developers.lseg.com/).

@@ -2,6 +2,7 @@
 __pycache__/
 *.py[codz]
 .venv/
+.pytest_cache/
 
 # Project-specific
 note.txt

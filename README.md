@@ -75,6 +75,12 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+If you also want to run the automated test suite, install `pytest` manually alongside `requirements.txt`:
+
+```powershell
+python -m pip install pytest
+```
+
 3. Configure DSS credentials
 
 Set the DSS Username and password to your OS environment variable named `DSS_USERNAME` and `DSS_PASSWORD`. Alternatively, change the following code to your DSS credential.
@@ -99,6 +105,25 @@ Open the prefer notebook in JupyterLab or VS Code and run the cells in order.
 cd \notebook
 jupyter lab trth_chainhistory_session.ipynb
 ```
+
+---
+
+## Running Tests
+
+The automated test suite in `tests/test_chainhistory_notebook.py` validates notebook syntax, helper functions (`resolve_chain_request`, `get_valid_rics`, and `compare_chain_constituents`), and the end-to-end workflow using mocked DSS REST and LSEG Data Library responses (no live credentials required).
+
+`pytest` is not pinned in `requirements.txt`—install it manually in your activated `.venv` alongside `requirements.txt`:
+
+```powershell
+python -m pip install pytest
+```
+
+Then run the test suite from the project root:
+
+```powershell
+python -m pytest -v
+```
+
 ---
 
 ## Dependencies
@@ -109,6 +134,8 @@ jupyter lab trth_chainhistory_session.ipynb
 | `jupyterlab` | Interactive notebook environment |
 
 See `requirements.txt` for pinned versions.
+
+**Note**: The `pytest` is a development-only testing tool, so it is not listed in `requirements.txt` file.
 
 ---
 

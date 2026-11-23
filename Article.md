@@ -1,13 +1,13 @@
 # Getting Historical Chain Constituents with LSEG Tick History REST API and LSEG Data Library for Python
 
+## Overview
+
 The [LSEG Data Library for Python](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python) `Chain` object returns a chain's constituents, which you can then use with `get_data` and `get_history`. But some bonds chains change its constituent over time because exchanges periodically update which bonds meet the  maturity and coupon criteria for delivery. For instance, newly issued Treasuries are added while older bonds that have fallen below the minimum remaining maturity are removed. 
 
 Examples:
 - **0#TYc1=DLV**: CBoT 10-Year US Treasury Note
 - **0#FGBMc1=DLV**: Eurex Euro-Bobl (5-year German Govt Bond)
 - **0#JGBc1=DLV**: Osaka Exchange 10-Year Japanese Government Bond
-
-
 
 The `Chain` object returns **current constituents** because it gets data from the Real-Time platform. To resolve constituents for a specific time, use the [LSEG Tick History REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api), which supports current and past constituents, including inactive, historical-only instruments. 
 
@@ -17,17 +17,75 @@ Once you get the constituents of that specific time from the Tick History, you c
 
 You can also use the Tick History REST API for the entire workflow. See the [Tick History REST API tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction) for details. This example is for developers who use the Data Library as their primary API.
 
+## A Brief Introduction to Chain 
+
+Let’s start with an quick introduction to chain RIC. Chain RICs hold instrument names that have a common association. For example, a chain may contain the constituents of a market index like the Dow Jones or the list of strike prices on a particular option contract. It is important to note that chains contain the instrument names (RIC Code) but not the values of the instruments. If you are interested in the instruments’ values, you must explicitly request these instruments. 
+
+For example, in the screenshots below, the Workspace Quote app displays both the names and the values of the Stock Exchange of Thailand (SET - `0#.SETI` RIC) constituents. To this aim, it first subscribed to the chain to get the names of the constituent, then it subscribed to these constituents to get their values.
+
+![Stock Exchange of Thailand Chain RIC](./images/01_set_index.png)
+
+If you change the display view to "display all fields", you see that the `0#.SETI` RIC contains only its constituent names.
+
+![Stock Exchange of Thailand Chain RIC actual data](./images/02_set_index.png) 
+
+As market conditions change, chain RICs can change their constituents over time as new RICs are added and existing RICs are removed. Deliverable-basket chains are one example.
+
+## Deliverable Basket Chains Examples 
+
+Here are examples of bond futures deliverable basket chain RICs, built from the active futures contracts found.
+
+| Market | Deliverable Basket Chain | Futures Root | Futures Continuation RIC | Description |
+|---|---|---|---|---|
+| US Treasury Futures (CBOT) | `0#TYc1=DLV` | `TY` | `TYc1` | CBoT 10-Year US Treasury Note |
+| US Treasury Futures (CBOT) | `0#FVc1=DLV` | `FV` | `FVc1` | CBoT 5-Year US Treasury Note |
+| US Treasury Futures (CBOT) | `0#TUc1=DLV` | `TU` | `TUc1` | CBoT 2-Year US Treasury Note |
+| US Treasury Futures (CBOT) | `0#AULc1=DLV` | `AUL` | `AULc1` | CBoT Ultra T-Bond (Long-term US Treasury) |
+| European Government Bond Futures (Eurex) | `0#FGBLc1=DLV` | `FGBL` | `FGBLc1` | Eurex Euro-Bund (10-year German Govt Bond) |
+| European Government Bond Futures (Eurex) | `0#FGBMc1=DLV` | `FGBM` | `FGBMc1` | Eurex Euro-Bobl (5-year German Govt Bond) |
+| European Government Bond Futures (Eurex) | `0#FGBSc1=DLV` | `FGBS` | `FGBSc1` | Eurex Euro-Schatz (2-year German Govt Bond) |
+| UK Gilt Futures (ICE Europe) | `0#FLGc1=DLV` | `FLG` | `FLGc1` | ICE Europe Long Gilt |
+| Japan & Australia | `0#JGBc1=DLV` | `JGB` | `JGBc1` | Osaka Exchange 10-Year Japanese Government Bond |
+| Japan & Australia | `0#YTTc1=DLV` | `YTT` | `YTTc1` | ASX 3-Year Australian Treasury Bond |
+| Japan & Australia | `0#YTCc1=DLV` | `YTC` | `YTCc1` | ASX 10-Year Australian Treasury Bond |
+
+### How the Pattern Works
+
+- `0#` chain RIC prefix, which is an expanding list of constituents.
+- **Future Root** (for example, `TY`, `FV`, or `FGBL`) identifies the futures contract series.
+- `c1` is the front-month, or nearest, continuation. Substitute `c2` for the second-month contract, `c3` for the third, and so on.
+- `=DLV` is the deliverable basket suffix, listing the bonds currently eligible for physical delivery into that futures contract.
+
+The constituent bonds change over time because exchanges periodically update which bonds meet the maturity and coupon criteria for delivery. For instance, newly issued Treasuries are added while older bonds that have fallen below the minimum remaining maturity are removed.
+
+### Note
+
+Please note that not every exchange may expose its deliverable basket through the `=DLV` chain RIC convention. I strongly suggest you contact the Content Support Team to verify the chain ric name and structure of the exchange and data you need.
+
+That covers the chain RICs constituent changed. 
+
+## Prerequisites
+
+1. DataScope Select credentials and permission to access the Tick History REST API
+2. Workspace or Data Platform access for the LSEG Data Library for Python
+3. Python 3.12 or later
+4. Network access to LSEG services
+
+Contact your LSEG Account Manager or CSM team to request API access.
+
+## Code Walkthrough
+
+Now let me move on to step-by-step code walkthrough.
+
+### Prerequisite  
+
+To use the Tick History REST API, you need DataScope Select (DSS) credentials and permission for the service. Workspace or Data Platform access alone does not grant DSS access; contact your LSEG Account Manager or CSM team to request it.
+
 ```python
+
 import os
 import time
 import requests
-```
-
-## Prerequisite  
-
-The Tick History - REST API requires the DataScope Select (DSS) credential and permission. Please contact your LSEG Account Manager or CSM team to help you get the DSS access credential for the Tick History API.
-
-```python
 BASE_URL = "https://selectapi.datascope.lseg.com/RestApi/v1"
 TIMEOUT = 30  # seconds
 
@@ -42,9 +100,7 @@ if not DSS_USERNAME or not DSS_PASSWORD:
 
 First, request an authentication token from the DSS server. The request must include valid DSS credentials. For details, see [Tick History - REST API Tutorial 1: Connecting to the server](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorial-1-connecting-to-the-server).
 
-The DSS authentication token is valid for 24 hours. Include it in the HTTP `Authorization` header as `Token {DSS Token}` in all Tick History data extraction requests.
-
-This example uses a [Requests Session object](https://requests.readthedocs.io/en/latest/user/advanced/#session-objects) for all HTTP requests to DSS. A session reuses the TCP connection when making multiple requests to the same host, which can significantly improve performance. It also lets you set parameters, such as HTTP headers and cookies, that persist across requests.
+This project uses a [Requests Library Session object](https://requests.readthedocs.io/en/latest/user/advanced/#session-objects) for all HTTP requests to DSS. A session reuses the TCP connection when making multiple requests to the same host, which can significantly improve performance. It also lets you set parameters, such as HTTP headers and cookies, that persist across requests.
 
 ```python
 
@@ -52,6 +108,9 @@ This example uses a [Requests Session object](https://requests.readthedocs.io/en
 session = requests.Session()
 session.headers["Content-Type"] = "application/json"
 session.headers["Prefer"] = "respond-async"
+
+
+#BASE_URL = "https://selectapi.datascope.lseg.com/RestApi/v1"
 
 # Get an access token using the DSS credentials.
 try:
@@ -73,18 +132,22 @@ if token:
     session.headers["Authorization"] = f"Token {token}"
 ```
 
-**Output:**
+Example output:
 
 ```text
 Authentication Tick History response: 200
 Token obtained
 ```
 
-## Resolving Historical Chain Constituents
+The DSS authentication token is valid for 24 hours. Include it in the HTTP `Authorization` header as `Token {DSS Token}` in all Tick History data extraction requests.
 
-The Tick History REST API's `/Search/HistoricalChainResolution` endpoint resolves the constituents of a Chain RIC for a specified date range. It supports currently active, or inactive 'historical only' instruments.
+That’s all I have to say about the 
 
-Notice that the `_session.post()` call does not include an `Authorization` header. We added the header to the `session` object during authentication, so Requests includes it automatically with every request made through that session. 
+### Resolving Historical Chain Constituents
+
+That brings us to the Historical Chain expansion part. The Tick History REST API's `/Search/HistoricalChainResolution` endpoint resolves the constituents of a Chain RIC for a specified date range. It supports currently active, or inactive 'historical only' instruments.
+
+Notice that the `_session.post()` statement call does not include an `Authorization` header. We added the header to the `session` object during authentication, so Requests includes it automatically with every request made through that session. 
 
 I define the historical chain constituent extraction in a `resolve_chain_request` function so we can call the endpoint multiple times throughout the workflow. Pass the `session` object to the function as `_session` each time.
 
@@ -136,6 +199,8 @@ def resolve_chain_request(request_session, base_url, chain_rics_list, start, end
         raise RuntimeError("Historical chain resolution request failed") from exc
 ```
 
+#### Requesting 2024 Period
+
 Lets make a first `/Search/HistoricalChainResolution` endpoint call via `resolve_chain_request` method. I am requesting *0#TYc1=DLV* (CBoT 10-Year US Treasury Note) and *#FGBMc1=DLV* (5-year German Govt Bond) RIC on the May and June 2024 period.
 
 ```python
@@ -154,7 +219,7 @@ constituents_2024 = resolve_chain_request(
 )
 ```
 
-**Output:**
+Output: 
 
 ```text
 Resolving ['0#TYc1=DLV', '0#FGBMc1=DLV'] from 2024-05-01T00:00:00.000Z to 2024-06-30T00:00:00.000Z
@@ -165,7 +230,7 @@ Historical Chain Resolution: 0#FGBMc1=DLV - 6 constituents returned
 
 The response is a Python dictionary: each chain RIC is a key, and its value is the list of constituent records for that chain (`{"0#TYc1=DLV": [...], "0#FGBMc1=DLV": [...]}`). For example, `constituents_2024["0#TYc1=DLV"]` returns the constituent records for the CBoT 10-Year US Treasury chain.
 
-The `get_valid_rics` function selects the requested chain's records, keeps only those with `"Status": "Valid"` and `"IdentifierType": "Ric"`, and returns their identifiers. The results are stored in `us_10y_treasury_rics_2024` and `euro_bobl_5y_rics_2024`.
+The `get_valid_rics` function selects the requested chain's records, keeps only those with `"Status": "Valid"` and `"IdentifierType": "Ric"`, and returns their identifiers. The results are stored in `us_10y_treasury_rics_2024` and `euro_bobl_5y_rics_2024`variables.
 
 ```python
 def get_valid_rics(constituents,chain_ric):
@@ -177,8 +242,11 @@ def get_valid_rics(constituents,chain_ric):
     ]
 
 us_10y_treasury_rics_2024 = get_valid_rics(constituents_2024, CHAIN_RICS[0])
-us_10y_treasury_rics_2024
+euro_bobl_5y_rics_2024 = get_valid_rics(constituents_2024, CHAIN_RICS[1])
+
 ```
+
+The list of *0#TYc1=DLV* constituents from May to end of June 2024 is as follows:
 
 **Output (plain text):**
 
@@ -203,16 +271,75 @@ us_10y_treasury_rics_2024
  '91282CKW0=']
 ```
 
-```python
-euro_bobl_5y_rics_2024 = get_valid_rics(constituents_2024, CHAIN_RICS[1])
-euro_bobl_5y_rics_2024
-```
-
-**Output (plain text):**
+The list of *0#FGBMc1=DLV* constituents from May to end of June 2024 is as follows:
 
 ```text
 ['DE110246=', 'DE110247=', 'DE110249=', 'DE110262=', 'DEBU2502=', 'DEBU3502=']
 ```
+
+#### Requesting 2026 Period
+
+Lets try to request the same *0#TYc1=DLV* and *#FGBMc1=DLV* constituent RICs from the May to June 2026 period.
+
+```python
+START_2026 = "2026-05-01T00:00:00.000Z"
+END_2026   = "2026-06-30T00:00:00.000Z"
+
+# Fetch 2026 constituents via resolve_chain_request()
+constituents_2026 = resolve_chain_request(
+    request_session = session, 
+    base_url = BASE_URL, 
+    chain_rics_list = CHAIN_RICS,
+    start = START_2026, 
+    end = END_2026, 
+    timeout = TIMEOUT
+)
+```
+
+**Output:**
+
+```text
+Resolving ['0#TYc1=DLV', '0#FGBMc1=DLV'] from 2026-05-01T00:00:00.000Z to 2026-06-30T00:00:00.000Z
+Historical Chain Resolution response: 200
+Historical Chain Resolution: 0#TYc1=DLV - 19 constituents returned
+Historical Chain Resolution: 0#FGBMc1=DLV - 5 constituents returned
+```
+
+```python
+us_10y_treasury_rics_2026 = get_valid_rics(constituents_2026, CHAIN_RICS[0])
+euro_bobl_5y_rics_2026 = get_valid_rics(constituents_2026, CHAIN_RICS[1])
+```
+
+The list of *0#TYc1=DLV* constituents from May to end of June 2026 is as follows:
+
+```text
+['91282CDJ7=',
+ '91282CDY4=',
+ '91282CFF3=',
+ '91282CFV8=',
+ '91282CGM7=',
+ '91282CHC8=',
+ '91282CHT1=',
+ '91282CJJ1=',
+ '91282CJZ5=',
+ '91282CKQ3=',
+ '91282CLF6=',
+ '91282CPQ8=',
+ '91282CPY1=',
+ '91282CQC8=',
+ '91282CQF1=',
+ '91282CQN4=',
+ '91282CQQ7=',
+ '91282CQT1=',
+ '91282CQW4=']
+```
+
+The list of *0#FGBMc1=DLV* constituents from May to end of June 2026 is as follows:
+
+```text
+['DE103073=', 'DE110253=', 'DE110256=', 'DE110258=', 'DEBU2506=']
+```
+
 
 A quick reminder: You can use the LSEG Tick History REST API for the entire workflow, including retrieving historical data for these constituents (`us_10y_treasury_rics_2024`, `euro_bobl_5y_rics_2024`), without using any other LSEG APIs. For example:
 - [REST API Tutorial 6: On Demand intraday bars extraction](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorial-6-on-demand-intraday-bars-extraction)
@@ -930,22 +1057,6 @@ Date
 2024-05-29   97.09    97.219  97.238    97.221  97.274
 ```
 
-Lets try to request the same *0#TYc1=DLV* and *#FGBMc1=DLV* constituent RICs on the May and June 2026 period.
-
-```python
-START_2026 = "2026-05-01T00:00:00.000Z"
-END_2026   = "2026-06-30T00:00:00.000Z"
-
-# Fetch 2026 constituents via resolve_chain_request()
-constituents_2026 = resolve_chain_request(
-    request_session = session, 
-    base_url = BASE_URL, 
-    chain_rics_list = CHAIN_RICS,
-    start = START_2026, 
-    end = END_2026, 
-    timeout = TIMEOUT
-)
-```
 
 **Output:**
 

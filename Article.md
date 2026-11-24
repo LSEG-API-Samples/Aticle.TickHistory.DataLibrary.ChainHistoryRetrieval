@@ -451,4 +451,4 @@ You can find more detail regarding the LSEG Tick History - REST API and Data Lib
 - [Data Library for Python - Quickstart Guide](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python/quick-start)
 - [Data Library for Python Examples on GitHub](https://github.com/LSEG-API-Samples/Example.DataLibrary.Python) repository
 
-For any question related to this example or Data Library, please use the Developers Community [Q&A Forum](https://community.developers.lseg.com/).
+For any question related to this example or LSEG APIs, please use the Developers Community [Q&A Forum](https://community.developers.lseg.com/).

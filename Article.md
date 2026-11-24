@@ -443,7 +443,7 @@ That covers all I wanted to say today
 
 ## Reference
 
-You can find more detail regarding the Data Library and Python Asyncio from the following resources:
+You can find more detail regarding the LSEG Tick History - REST API and Data Library and Python from the following resources:
 
 - [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api) on the [LSEG Developer Community](https://developers.lseg.com/) website
 - [LSEG Tick History - REST API Tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction)

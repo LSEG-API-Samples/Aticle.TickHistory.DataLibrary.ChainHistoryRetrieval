@@ -15,7 +15,7 @@ Examples:
 - **0#FGBMc1=DLV**: Eurex Euro-Bobl (5-year German Govt Bond)
 - **0#JGBc1=DLV**: Osaka Exchange 10-Year Japanese Government Bond
 
-The [LSEG Data Library for Python](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python) offers a convenient way to expand a chain using its `Chain` object. The object returns a chain's *current constituents which you can then use with the library's other methods. 
+The [LSEG Data Library for Python](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python) offers a convenient way to expand a chain using its `Chain` object. The object returns a chain's *current constituents* which you can then use with the library's other methods. 
 
 The question is, how can we get the chain constituents for a specific time?
 
@@ -25,7 +25,7 @@ The [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/re
 
 - [Tutorial 15: Historical Chain Constituents Search](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorial-15-historical-chain-constituents-search)
 
-Once you have the constituents for the period you need, you can retrieve their historical data using Tick History, the Data Library (every editions), or another LSEG API, such as the [Data Platform APIs (RDP)](https://developers.lseg.com/en/api-catalog/refinitiv-data-platform/refinitiv-data-platform-apis).
+Once you have the constituents for the period you need, you can retrieve their historical data using Tick History, the Data Library (all editions), or another LSEG API, such as the [Data Platform APIs (RDP)](https://developers.lseg.com/en/api-catalog/refinitiv-data-platform/refinitiv-data-platform-apis).
 
 #### Note
 
@@ -35,7 +35,7 @@ The Tick History REST API can also be used for the entire workflow. See the [Tic
 
 ## Project Structure and Included Notebooks
 
-- [notebook/chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury and `0#FGBMc1=DLV` Bond chains for two date ranges, compares the results, and retrieves sample weekly bid and ask history using the LSEG Data Library for Python.
+- [notebook/chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury and `0#FGBMc1=DLV` Bond chains for two date ranges, compares the results, and retrieves sample bid and ask history using the LSEG Data Library for Python.
 - [notebook/lseg-data.config.json](notebook/lseg-data.config.json): LSEG Data Library session configuration.
 - [Article.md](Article.md): Written walkthrough of the workflow.
 - [images/](images/): Screenshots used in the article.
@@ -102,6 +102,8 @@ DSS_USERNAME = "Your DSS Username"
 DSS_PASSWORD = "Your DSS Password"
 ```
 
+**Note: Do not commit or share a notebook with hard-coded credentials.**
+
 4. Configure Data Library credential
 
 See [Data Library for Python - QuickStart Guide](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python/quick-start) page for more detail.
@@ -111,8 +113,8 @@ See [Data Library for Python - QuickStart Guide](https://developers.lseg.com/en/
 Open the prefer notebook in JupyterLab or VS Code and run the cells in order.
 
 ```powershell
-cd \notebook
-jupyter lab trth_chainhistory_session.ipynb
+cd .\notebook
+jupyter lab chainhistory_tickhistory_ld.ipynb
 ```
 
 ---
@@ -156,7 +158,7 @@ See [LICENSE.md](LICENSE.md).
 
 ## Reference
 
-You can find more detail regarding the Data Library and Python Asyncio from the following resources:
+You can find more detail regarding the LSEG Tick History - REST API and Data Library and Python from the following resources:
 
 - [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api) on the [LSEG Developer Community](https://developers.lseg.com/) website
 - [LSEG Tick History - REST API Tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction)

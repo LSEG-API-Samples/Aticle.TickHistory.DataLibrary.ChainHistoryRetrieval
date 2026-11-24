@@ -249,7 +249,7 @@ pd.DataFrame(us_10y_treasury_rics_2024, columns=["RIC"])
 
 The list of *0#TYc1=DLV* constituents from May to end of June 2024 is as follows (displayed in Pandas format):
 
-![CBoT 10-Year US Treasury Note constituents from May to end of June 2024](/images/03_dataframe_1.png)
+![CBoT 10-Year US Treasury Note constituents from May to end of June 2024](./images/03_dataframe_1.png)
 
 ```python
 euro_bobl_5y_rics_2024 = get_valid_rics(constituents_2024, CHAIN_RICS[1])
@@ -258,7 +258,7 @@ pd.DataFrame(euro_bobl_5y_rics_2024, columns=["RIC"])
 
 The list of *0#FGBMc1=DLV* constituents from May to end of June 2024 is as follows:
 
-![5-year German Govt Bond constituents from May to end of June 2024](/images/04_dataframe_2.png)
+![5-year German Govt Bond constituents from May to end of June 2024](./images/04_dataframe_2.png)
 
 #### Requesting 2026 Period Constituents
 
@@ -295,7 +295,7 @@ us_10y_treasury_rics_2026 = get_valid_rics(constituents_2026, CHAIN_RICS[0])
 pd.DataFrame(us_10y_treasury_rics_2026, columns=["RIC"])
 ```
 
-![CBoT 10-Year US Treasury Note constituents from May to end of June 2026](/images/05_dataframe_3.png)
+![CBoT 10-Year US Treasury Note constituents from May to end of June 2026](./images/05_dataframe_3.png)
 
 ```python
 euro_bobl_5y_rics_2026 = get_valid_rics(constituents_2026, CHAIN_RICS[1])
@@ -304,17 +304,17 @@ pd.DataFrame(euro_bobl_5y_rics_2024, columns=["RIC"])
 
 The list of *0#FGBMc1=DLV* constituents from May to end of June 2026 is as follows:
 
-![5-year German Govt Bond constituents from May to end of June 2026](/images/06_dataframe_4.png)
+![5-year German Govt Bond constituents from May to end of June 2026](./images/06_dataframe_4.png)
 
 Comparing the 2024 and 2026 constituents for deliverable basket chains show how their constituent bond RICs changed over time.
 
 CBoT 10-Year US Treasury Note
 
-![CBoT 10-Year US Treasury Note constituents 2024 vs 2026](/images/07_dataframe_5.png)
+![CBoT 10-Year US Treasury Note constituents 2024 vs 2026](./images/07_dataframe_5.png)
 
  5-year German government bond
 
-![5-year German government bond constituents 2024 vs 2026](/images/08_dataframe_6.png)
+![5-year German government bond constituents 2024 vs 2026](./images/08_dataframe_6.png)
 
 Now we have a set of 2024 and 2026 constituent RICs, we can use the Data Library for Python to get these RICs historical data values.
 
@@ -351,7 +351,7 @@ us_10y_treasury_history_2024 = ld.get_history(
 us_10y_treasury_history_2024.head(20)
 ```
 
-![CBoT 10-Year US Treasury Note constituents 2024 historical data ](/images/09_dataframe_7.png)
+![CBoT 10-Year US Treasury Note constituents 2024 historical data ](./images/09_dataframe_7.png)
 
 ```python
 euro_bobl_5y_history_2024 = ld.get_history(
@@ -364,7 +364,7 @@ euro_bobl_5y_history_2024 = ld.get_history(
 
 euro_bobl_5y_history_2024.head(20)
 ```
-![5-year German government bond constituents 2024 historical data ](/images/10_dataframe_8.png)
+![5-year German government bond constituents 2024 historical data ](./images/10_dataframe_8.png)
 
 Moving on the May and June 2026 historical data. I am requesting the same query as 2024 for both set of constituents.
 
@@ -380,7 +380,7 @@ us_10y_treasury_history_2026 = ld.get_history(
 us_10y_treasury_history_2026.head(20)
 ```
 
-![CBoT 10-Year US Treasury Note constituents 2026 historical data](/images/11_dataframe_9.png)
+![CBoT 10-Year US Treasury Note constituents 2026 historical data](./images/11_dataframe_9.png)
 
 And for the German 5 years government bond in 2026 with daily interval, we have:
 
@@ -396,7 +396,7 @@ euro_bobl_5y_history_2026 = ld.get_history(
 euro_bobl_5y_history_2026.head(20)
 ```
 
-![5-year German government bond constituents 2024 historical data ](/images/10_dataframe_8.png)
+![5-year German government bond constituents 2026 historical data](./images/12_dataframe_10.png)
 
 Let’s leave the data retrieval part there.
 

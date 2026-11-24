@@ -33,9 +33,16 @@ The Tick History REST API can also be used for the entire workflow. See the [Tic
 
 ---
 
-## Included Notebooks
+## Project Structure and Included Notebooks
 
-- [chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury chain for two date ranges, compares the results, and retrieves sample weekly bid and ask history using the LSEG Data Library for Python.
+- [notebook/chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury and `0#FGBMc1=DLV` Bond chains for two date ranges, compares the results, and retrieves sample weekly bid and ask history using the LSEG Data Library for Python.
+- [notebook/lseg-data.config.json](notebook/lseg-data.config.json): LSEG Data Library session configuration.
+- [Article.md](Article.md): Written walkthrough of the workflow.
+- [images/](images/): Screenshots used in the article.
+- [tests/](tests/): Offline tests for the notebook.
+- [requirements.txt](requirements.txt): Python dependencies.
+- [AGENTS.md](AGENTS.md): Project guidance for coding agents.
+- [.github/copilot-instructions.md](.github/copilot-instructions.md): GitHub Copilot instructions referencing the project guidance.
 
 ---
 
@@ -47,6 +54,8 @@ The Tick History REST API can also be used for the entire workflow. See the [Tic
 4. Network access to LSEG services
 
 Contact your LSEG Account Manager or CSM team to request API access.
+
+
 
 ---
 

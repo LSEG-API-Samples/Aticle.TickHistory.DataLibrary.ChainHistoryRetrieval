@@ -13,6 +13,8 @@ A single-notebook example that resolves historical chain constituents with the L
 
 - [notebook/chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb) holds the whole workflow: DSS authentication, `resolve_chain_request`, `get_valid_rics`, `compare_chain_constituents`, and `ld.get_history`.
 - [tests/test_chainhistory_notebook.py](tests/test_chainhistory_notebook.py) loads the notebook with `nbformat` and tests it directly. There is no separate Python module.
+- [Article.md](Article.md) is the written walkthrough of the historical chain resolution and price retrieval workflow. Its content is not in the same order as the notebook: it covers constituents for both years before retrieving prices, while the notebook retrieves 2024 prices before resolving 2026 constituents.
+- [images/](images/) contains the screenshots referenced by the article, including chain displays and DataFrame results.
 
 ## Conventions
 
@@ -20,6 +22,7 @@ A single-notebook example that resolves historical chain constituents with the L
 - `resolve_chain_request` returns `{chain_ric: constituents}`. Key by each result's `"Identifier"`, never by position, because chains with no history are omitted from the API's `"value"` list.
 - Name variables `<instrument>_rics_<year>` and `<instrument>_history_<year>`, for example `us_10y_treasury_rics_2024` and `euro_bobl_5y_history_2026`.
 - Update markdown cells when renaming variables; the prose refers to them by name.
+- Keep article code examples and explanations consistent with the relevant notebook workflow. When changing article screenshots, check that image links and captions point to the correct files and results.
 
 ## Notebook and Test Coupling
 

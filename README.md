@@ -38,6 +38,7 @@ The Tick History REST API can also be used for the entire workflow. See the [Tic
 - [notebook/chainhistory_tickhistory_ld.ipynb](notebook/chainhistory_tickhistory_ld.ipynb): Resolves historical constituents of the `0#TYc1=DLV` Treasury and `0#FGBMc1=DLV` Bond chains for two date ranges, compares the results, and retrieves sample bid and ask history using the LSEG Data Library for Python.
 - [notebook/lseg-data.config.json](notebook/lseg-data.config.json): LSEG Data Library session configuration.
 - [Article.md](Article.md): Written walkthrough of the workflow.
+- [Article_portal.md](Article_portal.md): Portal-formatted version of the walkthrough, using syntax supported by the portal website system.
 - [images/](images/): Screenshots used in the article.
 - [tests/](tests/): Offline tests for the notebook.
 - [requirements.txt](requirements.txt): Python dependencies.

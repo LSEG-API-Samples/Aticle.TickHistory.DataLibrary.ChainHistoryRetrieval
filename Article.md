@@ -1,4 +1,4 @@
-# Getting Historical Chain Constituents with LSEG Tick History REST API and LSEG Data Library for Python
+# Getting Historical Chain Constituents Data with LSEG Tick History REST API and Data Library for Python
 
 ## Overview
 
@@ -15,7 +15,7 @@ Once you get the constituents of that specific time from the Tick History, you c
 
 **Note**
 
-You can also use the Tick History REST API for the entire workflow. See the [Tick History REST API tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction) for details. This example is for developers who use the Data Library as their primary API.
+You can use the Tick History REST API for the entire workflow. See the [Tick History REST API tutorials](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorials-introduction) for details. This example is for developers who use the Data Library as their primary API.
 
 ## A Brief Introduction to Chain 
 
@@ -37,24 +37,26 @@ Here are examples of bond futures deliverable basket chain RICs, built from the 
 
 | Market | Deliverable Basket Chain | Futures Root | Futures Continuation RIC | Description |
 |---|---|---|---|---|
-| US Treasury Futures (CBOT) | `0#TYc1=DLV` | `TY` | `TYc1` | CBoT 10-Year US Treasury Note |
-| US Treasury Futures (CBOT) | `0#FVc1=DLV` | `FV` | `FVc1` | CBoT 5-Year US Treasury Note |
-| US Treasury Futures (CBOT) | `0#TUc1=DLV` | `TU` | `TUc1` | CBoT 2-Year US Treasury Note |
-| US Treasury Futures (CBOT) | `0#AULc1=DLV` | `AUL` | `AULc1` | CBoT Ultra T-Bond (Long-term US Treasury) |
-| European Government Bond Futures (Eurex) | `0#FGBLc1=DLV` | `FGBL` | `FGBLc1` | Eurex Euro-Bund (10-year German Govt Bond) |
-| European Government Bond Futures (Eurex) | `0#FGBMc1=DLV` | `FGBM` | `FGBMc1` | Eurex Euro-Bobl (5-year German Govt Bond) |
-| European Government Bond Futures (Eurex) | `0#FGBSc1=DLV` | `FGBS` | `FGBSc1` | Eurex Euro-Schatz (2-year German Govt Bond) |
-| UK Gilt Futures (ICE Europe) | `0#FLGc1=DLV` | `FLG` | `FLGc1` | ICE Europe Long Gilt |
-| Japan & Australia | `0#JGBc1=DLV` | `JGB` | `JGBc1` | Osaka Exchange 10-Year Japanese Government Bond |
-| Japan & Australia | `0#YTTc1=DLV` | `YTT` | `YTTc1` | ASX 3-Year Australian Treasury Bond |
-| Japan & Australia | `0#YTCc1=DLV` | `YTC` | `YTCc1` | ASX 10-Year Australian Treasury Bond |
+| US Treasury Futures (CBOT) | **0#TYc1=DLV** | `TY` | `TYc1` | CBoT 10-Year US Treasury Note |
+| US Treasury Futures (CBOT) | **0#FVc1=DLV** | `FV` | `FVc1` | CBoT 5-Year US Treasury Note |
+| US Treasury Futures (CBOT) | **0#TUc1=DLV** | `TU` | `TUc1` | CBoT 2-Year US Treasury Note |
+| US Treasury Futures (CBOT) |**0#AULc1=DLV** | `AUL` | `AULc1` | CBoT Ultra T-Bond (Long-term US Treasury) |
+| European Government Bond Futures (Eurex) | **0#FGBLc1=DLV** | `FGBL` | `FGBLc1` | Eurex Euro-Bund (10-year German Govt Bond) |
+| European Government Bond Futures (Eurex) |**0#FGBMc1=DLV** | `FGBM` | `FGBMc1` | Eurex Euro-Bobl (5-year German Govt Bond) |
+| European Government Bond Futures (Eurex) | **0#FGBSc1=DLV** | `FGBS` | `FGBSc1` | Eurex Euro-Schatz (2-year German Govt Bond) |
+| UK Gilt Futures (ICE Europe) | **0#FLGc1=DLV** | `FLG` | `FLGc1` | ICE Europe Long Gilt |
+| Japan & Australia | **0#JGBc1=DLV** | `JGB` | `JGBc1` | Osaka Exchange 10-Year Japanese Government Bond |
+| Japan & Australia | **0#YTTc1=DLV** | `YTT` | `YTTc1` | ASX 3-Year Australian Treasury Bond |
+| Japan & Australia | **0#YTCc1=DLV** | `YTC` | `YTCc1` | ASX 10-Year Australian Treasury Bond |
+
+![CBoT 2-Year US Treasury Note](./images/02b_cbot_2yrs.png)
 
 ### How the Pattern Works
 
-- `0#` chain RIC prefix, which is an expanding list of constituents.
+- **0#** chain RIC prefix, which is an expanding list of constituents.
 - **Future Root** (for example, `TY`, `FV`, or `FGBL`) identifies the futures contract series.
-- `c1` is the front-month, or nearest, continuation. Substitute `c2` for the second-month contract, `c3` for the third, and so on.
-- `=DLV` is the deliverable basket suffix, listing the bonds currently eligible for physical delivery into that futures contract.
+- **c1** is the front-month, or nearest, continuation. Substitute `c2` for the second-month contract, `c3` for the third, and so on.
+- **=DLV** is the deliverable basket suffix, listing the bonds currently eligible for physical delivery into that futures contract.
 
 The constituent bonds change over time because exchanges periodically update which bonds meet the maturity and coupon criteria for delivery. For instance, newly issued Treasuries are added while older bonds that have fallen below the minimum remaining maturity are removed.
 
@@ -77,12 +79,11 @@ Contact your LSEG Account Manager or CSM team to request API access.
 
 Now let me move on to step-by-step code walkthrough.
 
-### Prerequisite  
+### Set Up Tick History REST API Access    
 
 To use the Tick History REST API, you need DataScope Select (DSS) credentials and permission for the service. Workspace or Data Platform access alone does not grant DSS access; contact your LSEG Account Manager or CSM team to request it.
 
 ```python
-
 import os
 import time
 import requests
@@ -105,7 +106,6 @@ First, request an authentication token from the DSS server. The request must inc
 This project uses a [Requests Library Session object](https://requests.readthedocs.io/en/latest/user/advanced/#session-objects) for all HTTP requests to DSS. A session reuses the TCP connection when making multiple requests to the same host, which can significantly improve performance. It also lets you set parameters, such as HTTP headers and cookies, that persist across requests.
 
 ```python
-
 # Reuse this session and its headers for Tick History requests.
 session = requests.Session()
 session.headers["Content-Type"] = "application/json"
@@ -156,7 +156,6 @@ I define the historical chain constituent extraction in a `resolve_chain_request
 You can find more detail regarding the `/Search/HistoricalChainResolution` endpoint from [Tick History - REST API Tutorial 15: Historical Chain Constituents Search](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials#rest-api-tutorial-15-historical-chain-constituents-search).
 
 ```python
-
 def resolve_chain_request(request_session, base_url, chain_rics_list, start, end, timeout):
     """Return a dict of `{chain_ric: constituents}` for `chain_rics_list` between `start` and `end`."""
     print(f"Resolving {chain_rics_list} from {start} to {end}")
@@ -232,7 +231,7 @@ Historical Chain Resolution: 0#FGBMc1=DLV - 6 constituents returned
 
 The response is a Python dictionary: each chain RIC is a key, and its value is the list of constituent records for that chain (`{"0#TYc1=DLV": [...], "0#FGBMc1=DLV": [...]}`). For example, `constituents_2024["0#TYc1=DLV"]` returns the constituent records for the CBoT 10-Year US Treasury chain.
 
-The `get_valid_rics` function selects the requested chain's records, keeps only those with `"Status": "Valid"` and `"IdentifierType": "Ric"`, and returns their identifiers. The results are stored in `us_10y_treasury_rics_2024` and `euro_bobl_5y_rics_2024`variables.
+The `get_valid_rics` function selects the requested chain's records, keeps only those with `"Status": "Valid"` and `"IdentifierType": "Ric"`, and returns their identifiers. The results are stored in `us_10y_treasury_rics_2024` and `euro_bobl_5y_rics_2024` variables.
 
 ```python
 def get_valid_rics(constituents,chain_ric):
@@ -312,7 +311,7 @@ CBoT 10-Year US Treasury Note
 
 ![CBoT 10-Year US Treasury Note constituents 2024 vs 2026](./images/07_dataframe_5.png)
 
- 5-year German government bond
+5-year German government bond
 
 ![5-year German government bond constituents 2024 vs 2026](./images/08_dataframe_6.png)
 
@@ -351,7 +350,7 @@ us_10y_treasury_history_2024 = ld.get_history(
 us_10y_treasury_history_2024.head(20)
 ```
 
-![CBoT 10-Year US Treasury Note constituents 2024 historical data ](./images/09_dataframe_7.png)
+![CBoT 10-Year US Treasury Note constituents 2024 historical data](./images/09_dataframe_7.png)
 
 ```python
 euro_bobl_5y_history_2024 = ld.get_history(
@@ -364,7 +363,7 @@ euro_bobl_5y_history_2024 = ld.get_history(
 
 euro_bobl_5y_history_2024.head(20)
 ```
-![5-year German government bond constituents 2024 historical data ](./images/10_dataframe_8.png)
+![5-year German government bond constituents 2024 historical data](./images/10_dataframe_8.png)
 
 Moving on the May and June 2026 historical data. I am requesting the same query as 2024 for both set of constituents.
 
@@ -435,7 +434,7 @@ That’s all I have to say about the workflow.
 
 ## Summary
 
-Chain constituents can change over time, so the[LSEG Data Library for Python](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python)'s current `Chain` contents may not represent a historical period. The [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api)'s `/Search/HistoricalChainResolution` endpoint resolves the constituents of a chain for a requested date range, including inactive, historical-only instruments.
+Chain constituents can change over time, so the [LSEG Data Library for Python](https://developers.lseg.com/en/api-catalog/lseg-data-platform/lseg-data-library-for-python)'s current `Chain` contents may not represent a historical period. The [LSEG Tick History - REST API](https://developers.lseg.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api)'s `/Search/HistoricalChainResolution` endpoint resolves the constituents of a chain for a requested date range, including inactive, historical-only instruments.
 
 In this article, the resolved May–June 2024 and 2026 constituents for the US Treasury and German Euro-Bobl chains were filtered to valid RICs and compared to identify bonds that were removed, unchanged, or added. Those RICs were then passed to the Data Library's `get_history` method to retrieve BID and ASK prices. This separates historical chain membership lookup from price retrieval, letting you use the LSEG API that best fits each part of your workflow.
 

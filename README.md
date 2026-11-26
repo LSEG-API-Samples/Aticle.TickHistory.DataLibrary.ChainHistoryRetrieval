@@ -1,4 +1,4 @@
-# Getting Historical Chain Data with LSEG Tick History REST API and LSEG Data Library for Python
+# Getting Historical Chain Constituents Data with LSEG Tick History REST API and Data Library for Python
 
 - Last Updated: November 2026
 - Language: Python
